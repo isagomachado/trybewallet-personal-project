@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { walletCurrenciesAction } from '../actions';
+
 class Wallet extends React.Component {
   constructor() {
     super();
@@ -9,6 +11,16 @@ class Wallet extends React.Component {
     this.state = {
       totalExpense: 0,
     };
+  }
+
+  async componentDidMount() {
+    const { walletCurrenciesDispatch } = this.props;
+
+    const request = await fetch('https://economia.awesomeapi.com.br/json/all');
+    const response = await request.json();
+    const coinsArray = Object.keys(response);
+    const requestedCoins = coinsArray.filter((coin) => coin !== 'USDT');
+    walletCurrenciesDispatch(requestedCoins);
   }
 
   render() {
@@ -33,8 +45,14 @@ const mapStateToProps = (state) => ({
   email: state.user.email,
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  walletCurrenciesDispatch:
+    (currencies) => dispatch(walletCurrenciesAction(currencies)),
+});
+
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
+  walletCurrenciesDispatch: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(Wallet);
+export default connect(mapStateToProps, mapDispatchToProps)(Wallet);
