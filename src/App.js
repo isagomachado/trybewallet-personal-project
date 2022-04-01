@@ -16,7 +16,7 @@ class App extends React.Component {
           />
           <Route
             path="/carteira"
-            component={ Wallet }
+            render={ (props) => <Wallet { ...props } /> }
           />
         </Switch>
       </div>
