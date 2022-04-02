@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { walletCurrenciesAction } from '../actions';
-import currenciesApi from '../services/api'
+import currenciesApi from '../services/api';
+import ExpenseTable from '../components/ExpenseTable';
 
 class Wallet extends React.Component {
   constructor() {
@@ -18,7 +19,7 @@ class Wallet extends React.Component {
       description: '',
       currency: 'USD',
       method: 'Dinheiro',
-      tag:'Alimentação',
+      tag: 'Alimentação',
     };
   }
 
@@ -26,10 +27,10 @@ class Wallet extends React.Component {
     const { walletCurrenciesDispatch } = this.props;
 
     const apiResponse = await currenciesApi();
-    console.log(apiResponse)
+    // console.log(apiResponse);
     const coinsArray = Object.keys(apiResponse);
     const requestedCoins = coinsArray.filter((coin) => coin !== 'USDT');
-    console.log(requestedCoins);
+    // console.log(requestedCoins);
     walletCurrenciesDispatch(requestedCoins);
   }
 
@@ -59,7 +60,7 @@ class Wallet extends React.Component {
       method,
       tag,
       exchangeRates: apiResponse,
-    }
+    };
 
     console.log(myObject);
   }
@@ -86,7 +87,7 @@ class Wallet extends React.Component {
             Preço:
             {' '}
             <input
-              type="text"
+              type="number"
               data-testid="value-input"
               name="value"
               id="value"
@@ -167,6 +168,7 @@ class Wallet extends React.Component {
         >
           Adicionar despesa
         </button>
+        <ExpenseTable />
       </div>
     );
   }
