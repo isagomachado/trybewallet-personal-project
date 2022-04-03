@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './ExpenseTable.css'
+
 class ExpenseTable extends React.Component {
   render() {
     return (

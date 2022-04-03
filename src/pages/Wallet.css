@@ -1,0 +1,30 @@
+header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 20px;
+}
+
+header img {
+  height: 80px;
+  width: 80px;
+}
+
+.rigth-content {
+  border: 1px solid gray;
+  display: flex;
+  justify-content: space-between;
+  width: 25em;
+}
+
+.total-expense-content {
+  display: flex;
+}
+
+form {
+  background-color: gray;
+  color: white;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 30px;
+}

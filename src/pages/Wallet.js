@@ -6,6 +6,8 @@ import { walletCurrenciesAction } from '../actions';
 import currenciesApi from '../services/api';
 import ExpenseTable from '../components/ExpenseTable';
 
+import './Wallet.css';
+
 class Wallet extends React.Component {
   constructor() {
     super();
@@ -76,10 +78,18 @@ class Wallet extends React.Component {
     return (
       <div>
         <header>
-          <p data-testid="email-field">{ email }</p>
-          <div>
-            <p data-testid="total-field">{ totalExpense }</p>
-            <p data-testid="header-currency-field">BRL</p>
+          <img src="https://cdn-icons-png.flaticon.com/512/1577/1577989.png" alt="Icone de uma careira" />
+          <div className="rigth-content">
+            <p className="email-field" data-testid="email-field">
+              Email:
+              { email }
+            </p>
+            {' '}
+            <div className="total-expense-content">
+              <p data-testid="total-field">{ totalExpense }</p>
+              {' '}
+              <p data-testid="header-currency-field">BRL</p>
+            </div>
           </div>
         </header>
         <form>
@@ -95,7 +105,6 @@ class Wallet extends React.Component {
               onChange={ this.handleChange }
             />
           </label>
-          <br />
           <label htmlFor="description">
             Descrição:
             {' '}
@@ -108,7 +117,6 @@ class Wallet extends React.Component {
               onChange={ this.handleChange }
             />
           </label>
-          <br />
           <label htmlFor="currency">
             Moeda:
             {' '}
@@ -129,7 +137,6 @@ class Wallet extends React.Component {
               }
             </select>
           </label>
-          <br />
           <label htmlFor="method">
             Pagamento:
             {' '}
@@ -144,7 +151,6 @@ class Wallet extends React.Component {
               <option value="Cartão de débito">Cartão de débito</option>
             </select>
           </label>
-          <br />
           <label htmlFor="tag">
             Categoria:
             {' '}
@@ -161,13 +167,13 @@ class Wallet extends React.Component {
               <option value="Saúde">Saúde</option>
             </select>
           </label>
+          <button
+            type="button"
+            onClick={ this.handleClick }
+          >
+            Adicionar despesa
+          </button>
         </form>
-        <button
-          type="button"
-          onClick={ this.handleClick }
-        >
-          Adicionar despesa
-        </button>
         <ExpenseTable />
       </div>
     );
