@@ -20,7 +20,7 @@ class ExpenseTable extends React.Component {
           </tr>
         </table>
       </div>
-    )
+    );
   }
 }
 
