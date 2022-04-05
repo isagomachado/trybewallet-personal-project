@@ -1,12 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import { walletCurrenciesAction } from '../actions';
+import {
+  walletCurrenciesAction,
+  fetchCurrenciesApi,
+  walletExpensesSaveAction,
+} from '../actions';
 import currenciesApi from '../services/api';
 import ExpenseTable from '../components/ExpenseTable';
 
 import './Wallet.css';
+
+const tagAlimentação = 'Alimentação';
 
 class Wallet extends React.Component {
   constructor() {
@@ -14,6 +19,7 @@ class Wallet extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.convetValueForBRL = this.convetValueForBRL.bind(this);
 
     this.state = {
       totalExpense: 0,
@@ -21,18 +27,15 @@ class Wallet extends React.Component {
       description: '',
       currency: 'USD',
       method: 'Dinheiro',
-      tag: 'Alimentação',
+      tag: tagAlimentação,
     };
   }
 
   async componentDidMount() {
     const { walletCurrenciesDispatch } = this.props;
-
     const apiResponse = await currenciesApi();
-    // console.log(apiResponse);
     const coinsArray = Object.keys(apiResponse);
     const requestedCoins = coinsArray.filter((coin) => coin !== 'USDT');
-    // console.log(requestedCoins);
     walletCurrenciesDispatch(requestedCoins);
   }
 
@@ -44,7 +47,30 @@ class Wallet extends React.Component {
     }, this.changeDisabled);
   }
 
+  convetValueForBRL() {
+    const { expenses } = this.props;
+    const changeValue = expenses.map((expense) => {
+      const { value, currency } = expense;
+      const expenseValueNumber = parseFloat(value);
+      const conversionValueNumber = parseFloat(expense.exchangeRates[currency].ask);
+      const convertedValue = expenseValueNumber * conversionValueNumber;
+      return convertedValue;
+    });
+    const total = changeValue.reduce((acc, crr) => parseFloat(acc) + parseFloat(crr));
+    this.setState({
+      totalExpense: (total).toFixed(2),
+      value: 0,
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: tagAlimentação,
+    });
+  }
+
   async handleClick() {
+    const { walletCurrenciesApiDispatchTHUNK } = this.props;
+    await walletCurrenciesApiDispatchTHUNK();
+    const { apiCurrencies, walletExpensesSaveDispatch } = this.props;
     const {
       value,
       description,
@@ -53,18 +79,17 @@ class Wallet extends React.Component {
       tag,
     } = this.state;
 
-    const apiResponse = await currenciesApi();
-    console.log(apiResponse);
     const myObject = {
       value,
       description,
       currency,
       method,
       tag,
-      exchangeRates: apiResponse,
+      exchangeRates: apiCurrencies,
     };
+    walletExpensesSaveDispatch(myObject);
 
-    console.log(myObject);
+    this.convetValueForBRL();
   }
 
   render() {
@@ -84,11 +109,10 @@ class Wallet extends React.Component {
               Email:
               { email }
             </p>
-            {' '}
             <div className="total-expense-content">
               <p data-testid="total-field">{ totalExpense }</p>
               {' '}
-              <p data-testid="header-currency-field">BRL</p>
+              <p className="brl" data-testid="header-currency-field">BRL</p>
             </div>
           </div>
         </header>
@@ -160,7 +184,7 @@ class Wallet extends React.Component {
               data-testid="tag-input"
               onChange={ this.handleChange }
             >
-              <option value="Alimentação">Alimentação</option>
+              <option value="Alimentação">tagAlimentação</option>
               <option value="Lazer">Lazer</option>
               <option value="Trabalho">Trabalho</option>
               <option value="Transporte">Transporte</option>
@@ -183,17 +207,27 @@ class Wallet extends React.Component {
 const mapStateToProps = (state) => ({
   email: state.user.email,
   currencies: state.wallet.currencies,
+  apiCurrencies: state.wallet.currenciesResponseApi,
+  expenses: state.wallet.expenses,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   walletCurrenciesDispatch:
     (currencies) => dispatch(walletCurrenciesAction(currencies)),
+  walletCurrenciesApiDispatchTHUNK: () => dispatch(fetchCurrenciesApi()),
+  walletExpensesSaveDispatch: (expense) => dispatch(walletExpensesSaveAction(expense)),
 });
 
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
   walletCurrenciesDispatch: PropTypes.func.isRequired,
   currencies: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
+  walletCurrenciesApiDispatchTHUNK: PropTypes.func.isRequired,
+  apiCurrencies: PropTypes.func.isRequired,
+  walletExpensesSaveDispatch: PropTypes.func.isRequired,
+  expenses: PropTypes.shape({
     map: PropTypes.func,
   }).isRequired,
 };

@@ -21,6 +21,10 @@ header img {
   display: flex;
 }
 
+.brl {
+  margin-left: 10px;
+}
+
 form {
   background-color: gray;
   color: white;
