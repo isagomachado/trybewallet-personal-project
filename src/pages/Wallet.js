@@ -11,7 +11,7 @@ import ExpenseTable from '../components/ExpenseTable';
 
 import './Wallet.css';
 
-const tagAlimentação = 'Alimentação';
+const tagAlimentação = 'Alimentação'; // Para solucionar o problema do lint
 
 class Wallet extends React.Component {
   constructor() {
@@ -46,6 +46,8 @@ class Wallet extends React.Component {
       [name]: value,
     }, this.changeDisabled);
   }
+
+  // Usei o repositório do Breno L. Lopes como referencia para montar a função convertValueForBRL
 
   convetValueForBRL() {
     const { expenses } = this.props;
@@ -184,7 +186,7 @@ class Wallet extends React.Component {
               data-testid="tag-input"
               onChange={ this.handleChange }
             >
-              <option value="Alimentação">tagAlimentação</option>
+              <option value="Alimentação">{ tagAlimentação }</option>
               <option value="Lazer">Lazer</option>
               <option value="Trabalho">Trabalho</option>
               <option value="Transporte">Transporte</option>
