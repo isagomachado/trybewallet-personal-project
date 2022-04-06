@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import './ExpenseTable.css';
 
@@ -40,10 +41,10 @@ class ExpenseTable extends React.Component {
                   <td>{ exchangeRates[currency].name }</td>
                   <td>{ (parseFloat(exchangeRates[currency].ask)).toFixed(2) }</td>
                   <td>
-                    {
-                      (parseFloat(value) * parseFloat(exchangeRates[currency].ask))
-                      .toFixed(2)
-                    }
+                  {
+                    (parseFloat(value) * parseFloat(exchangeRates[currency].ask))
+                    .toFixed(2)
+                  }
                   </td>
                   <td>Real</td>
                   <td>Botões</td>
@@ -65,6 +66,6 @@ ExpenseTable.propTypes = {
     map: PropTypes.func,
     length: PropTypes.func,
   }).isRequired,
-}
+};
 
 export default connect(mapStateToProps)(ExpenseTable);
